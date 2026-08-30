@@ -254,8 +254,8 @@ export default function AuthModal() {
                   className="w-full pl-9 pr-3 py-3 tracking-widest text-center text-lg font-mono rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 outline-none focus:border-purple-500 transition-colors"
                 />
               </div>
-              <p className="text-[11px] text-gray-500 mt-2 text-center">
-                Check terminal console for OTP or use test code: <span className="font-mono text-purple-400 font-semibold">339876</span>
+              <p className="text-[11px] text-gray-400 mt-2.5 text-center">
+                Didn't receive the email? Check your spam folder or verify your address.
               </p>
             </div>
 
