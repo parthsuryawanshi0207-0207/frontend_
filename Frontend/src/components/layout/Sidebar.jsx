@@ -206,19 +206,51 @@ export default function Sidebar({ onOpenHistory, onNewChat }) {
           </button>
 
           {/* User Profile / Login */}
-          <button
-            onClick={handleProfileClick}
-            className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white flex items-center justify-center active:scale-95 transition-all shadow-sm"
-            title={isAuthenticated ? user?.name : 'Sign In'}
-          >
-            {isAuthenticated ? (
-              <span className="text-[11px] font-semibold uppercase">
-                {(user?.name || user?.email || 'U')[0]}
-              </span>
-            ) : (
-              <User className="w-3.5 h-3.5 text-white" />
+          <div className="relative">
+            <button
+              onClick={handleProfileClick}
+              className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white flex items-center justify-center active:scale-95 transition-all shadow-sm"
+              title={isAuthenticated ? user?.name : 'Sign In'}
+            >
+              {isAuthenticated ? (
+                <span className="text-[11px] font-semibold uppercase">
+                  {(user?.name || user?.email || 'U')[0]}
+                </span>
+              ) : (
+                <User className="w-3.5 h-3.5 text-white" />
+              )}
+            </button>
+
+            {/* Mobile Profile Dropdown Popover */}
+            {isAuthenticated && isProfileMenuOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40 bg-black/20"
+                  onClick={() => setIsProfileMenuOpen(false)}
+                />
+                <div className="absolute top-9 right-0 w-60 p-3 rounded-2xl border border-white/10 shadow-2xl bg-[#141624]/95 backdrop-blur-2xl text-gray-100 z-50 animate-fadeIn text-xs">
+                  <div className="mb-2 pb-2 border-b border-white/10">
+                    <p className="font-semibold text-white truncate">{user?.name || 'User'}</p>
+                    <p className="text-gray-400 truncate text-[11px]">{user?.email}</p>
+                    <div className="mt-1 flex items-center gap-1 text-[10px] text-green-400 font-medium">
+                      <CheckCircle className="w-3 h-3" />
+                      <span>Verified Account</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsProfileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors font-medium"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
+              </>
             )}
-          </button>
+          </div>
         </div>
       </header>
     </>
