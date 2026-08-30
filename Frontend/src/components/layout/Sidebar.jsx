@@ -171,8 +171,8 @@ export default function Sidebar({ onOpenHistory, onNewChat }) {
         </div>
       </aside>
 
-      {/* 2. Mobile Top Navigation Bar (phones only) */}
-      <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#0d0f18]/90 backdrop-blur-xl border-b border-white/5 z-30 flex items-center justify-between px-3">
+      {/* 2. Mobile Top Navigation Bar: static flex item at top of screen (md:hidden) */}
+      <header className="md:hidden w-full h-14 bg-[#0d0f18]/95 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-3 flex-shrink-0 z-30">
         {/* Brand & Logo */}
         <div className="flex items-center gap-2">
           <button

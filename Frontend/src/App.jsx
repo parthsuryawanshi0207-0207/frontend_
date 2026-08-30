@@ -204,7 +204,7 @@ function ChatApp() {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden text-gray-100 flex">
+    <div className="relative w-screen h-screen overflow-hidden text-gray-100 flex flex-col md:flex-row">
       {/* Calm Gemini Dark Background */}
       <GeminiBackground />
 
@@ -228,8 +228,8 @@ function ChatApp() {
         onNewChat={handleNewChat}
       />
 
-      {/* Main Full-Width Content Area: pt-14 on mobile pushes the entire container below the 56px fixed header */}
-      <div className="flex-1 md:pl-14 pt-14 md:pt-0 flex flex-col h-full w-full min-w-0 overflow-hidden">
+      {/* Main Full-Width Content Area */}
+      <div className="flex-1 md:pl-14 flex flex-col h-full w-full min-w-0 overflow-hidden">
         {messages.length === 0 ? (
           // Welcome View when no messages
           <div className="flex-1 overflow-y-auto flex flex-col w-full">
