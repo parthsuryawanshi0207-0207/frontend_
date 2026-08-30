@@ -228,11 +228,11 @@ function ChatApp() {
         onNewChat={handleNewChat}
       />
 
-      {/* Main Full-Width Content Area */}
-      <div className="flex-1 md:pl-14 flex flex-col h-full w-full min-w-0 overflow-hidden">
+      {/* Main Full-Width Content Area: pt-14 on mobile pushes the entire container below the 56px fixed header */}
+      <div className="flex-1 md:pl-14 pt-14 md:pt-0 flex flex-col h-full w-full min-w-0 overflow-hidden">
         {messages.length === 0 ? (
           // Welcome View when no messages
-          <div className="flex-1 overflow-y-auto flex flex-col w-full pt-16 md:pt-0">
+          <div className="flex-1 overflow-y-auto flex flex-col w-full">
             <MainContent
               onSend={handleSendMessage}
               onFileUpload={handleFileUpload}
@@ -242,8 +242,8 @@ function ChatApp() {
         ) : (
           // Active Chat View: Full-width scroll container, scrollbar at edge of window
           <div className="flex-1 flex flex-col h-full w-full min-w-0 overflow-hidden">
-            {/* Messages Scroll Area - pt-20 on mobile ensures first message is never hidden under the fixed header */}
-            <div className="flex-1 overflow-y-auto w-full px-3 md:px-12 lg:px-24 pt-20 pb-8 md:py-8">
+            {/* Messages Scroll Area - bounded below header so content never scrolls under it */}
+            <div className="flex-1 overflow-y-auto w-full px-3 md:px-12 lg:px-24 py-4 md:py-8">
               <div className="max-w-4xl lg:max-w-5xl mx-auto w-full space-y-6">
                 {messages.map((msg) => (
                   <div
