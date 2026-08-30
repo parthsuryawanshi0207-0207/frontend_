@@ -1,25 +1,32 @@
 /**
  * API Configuration and Endpoints
  *
- * Configure your backend API base URL here.
- * Set up environment variables for different environments.
+ * Configured for FastAPI backend service and Django session injection.
  */
 
 // API Configuration
 export const API_CONFIG = {
-  // Default to localhost for development
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
-  TIMEOUT: 30000, // 30 seconds
-  DEMO_MODE: true, // Set to false when connecting to real backend
+  // Respect Django-injected variables if served from Django, else fallback to Vite .env
+  BASE_URL: (typeof window !== 'undefined' && window.FASTAPI_SERVICE_URL) || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
+  TIMEOUT: 60000, // 60 seconds
+  DEMO_MODE: (typeof window !== 'undefined' && typeof window.DEMO_MODE === 'boolean') ? window.DEMO_MODE : import.meta.env.VITE_DEMO_MODE === 'true',
+  DEFAULT_USER_EMAIL: (typeof window !== 'undefined' && window.USER_EMAIL) || import.meta.env.VITE_DEFAULT_USER_EMAIL || 'user@gmail.com',
 };
 
 // API Endpoints
 export const chatEndpoints = {
-  sendMessage: `${API_CONFIG.BASE_URL}/chat/send`,
-  uploadFile: `${API_CONFIG.BASE_URL}/chat/upload`,
-  voiceInput: `${API_CONFIG.BASE_URL}/chat/voice`,
-  getHistory: `${API_CONFIG.BASE_URL}/chat/history`,
-  deleteMessage: `${API_CONFIG.BASE_URL}/chat/messages/:id`,
+  get ask() {
+    const base = (typeof window !== 'undefined' && window.FASTAPI_SERVICE_URL) || API_CONFIG.BASE_URL;
+    return `${base}/query/ask`;
+  },
+  get uploadFile() {
+    const base = (typeof window !== 'undefined' && window.FASTAPI_SERVICE_URL) || API_CONFIG.BASE_URL;
+    return `${base}/documents/upload`;
+  },
+  get googleLogin() {
+    const base = (typeof window !== 'undefined' && window.FASTAPI_SERVICE_URL) || API_CONFIG.BASE_URL;
+    return `${base}/auth/google/login`;
+  },
 };
 
 /**
@@ -48,70 +55,66 @@ async function apiRequest(url, options = {}) {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.detail || `Server error (status ${response.status})`);
     }
 
     return await response.json();
   } catch (error) {
     clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error('Request timed out. Please check if the FastAPI server is running.');
+    }
     throw error;
   }
 }
 
 /**
- * Send a message to the AI
- * @param {string} message - User message
- * @param {object} metadata - Optional metadata
+ * Send a message to the FastAPI RAG Endpoint
+ * @param {string} message - User question
+ * @param {object} metadata - Optional metadata (userEmail, etc.)
  */
 export async function sendMessage(message, metadata = {}) {
-  return apiRequest(chatEndpoints.sendMessage, {
+  const userEmail = (typeof window !== 'undefined' && window.USER_EMAIL) || metadata.userEmail || API_CONFIG.DEFAULT_USER_EMAIL;
+
+  const data = await apiRequest(chatEndpoints.ask, {
     method: 'POST',
-    body: JSON.stringify({ message, metadata }),
+    body: JSON.stringify({
+      question: message,
+      user_email: userEmail,
+    }),
   });
+
+  return {
+    success: true,
+    data: {
+      message: data.answer,
+      sources: data.sources || [],
+      question: data.question,
+      timestamp: new Date().toISOString(),
+    },
+  };
 }
 
 /**
- * Upload a file
+ * Upload a document to FastAPI
  * @param {File} file - File to upload
+ * @param {string} userEmail - User email for access control
  */
-export async function uploadFile(file) {
+export async function uploadFile(file, userEmail) {
+  const email = (typeof window !== 'undefined' && window.USER_EMAIL) || userEmail || API_CONFIG.DEFAULT_USER_EMAIL;
   const formData = new FormData();
   formData.append('file', file);
 
-  return apiRequest(chatEndpoints.uploadFile, {
+  const response = await fetch(chatEndpoints.uploadFile, {
     method: 'POST',
-    headers: {}, // Let browser set multipart/form-data boundary
     body: formData,
   });
-}
 
-/**
- * Submit voice input
- * @param {Blob} audioBlob - Audio data
- */
-export async function submitVoiceInput(audioBlob) {
-  const formData = new FormData();
-  formData.append('audio', audioBlob);
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.detail || `Upload failed with status ${response.status}`);
+  }
 
-  return apiRequest(chatEndpoints.voiceInput, {
-    method: 'POST',
-    headers: {},
-    body: formData,
-  });
-}
-
-/**
- * Get chat history
- */
-export async function getChatHistory() {
-  return apiRequest(chatEndpoints.getHistory);
-}
-
-/**
- * Delete a message
- * @param {string} messageId - Message ID to delete
- */
-export async function deleteMessage(messageId) {
-  const url = chatEndpoints.deleteMessage.replace(':id', messageId);
-  return apiRequest(url, { method: 'DELETE' });
+  return await response.json();
 }

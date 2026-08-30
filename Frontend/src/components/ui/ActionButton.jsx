@@ -1,29 +1,29 @@
-import { Cpu, Code, Lightbulb, TrendingUp } from 'lucide-react';
+import { MailSearch, FileText, Receipt, SendHorizontal } from 'lucide-react';
 
 const actionButtons = [
   {
-    id: 'complex',
-    icon: Cpu,
-    title: 'Complex Topics',
-    description: 'Explain quantum computing in simple terms',
+    id: 'emails',
+    icon: MailSearch,
+    title: 'Summarize Emails',
+    description: 'Find important updates regarding deadlines',
   },
   {
-    id: 'code',
-    icon: Code,
-    title: 'Develop & Code',
-    description: 'Write a Python function to sort a list',
+    id: 'docs',
+    icon: FileText,
+    title: 'Analyze Documents',
+    description: 'Extract key points from uploaded PDF files',
   },
   {
-    id: 'brainstorm',
-    icon: Lightbulb,
-    title: 'Brainstorm Ideas',
-    description: 'Ideate a new productivity app',
+    id: 'invoices',
+    icon: Receipt,
+    title: 'Locate Receipts',
+    description: 'Check hostel allotment, fee dues, or grades',
   },
   {
-    id: 'trends',
-    icon: TrendingUp,
-    title: 'Current Trends',
-    description: 'Summarize the latest AI news',
+    id: 'draft',
+    icon: SendHorizontal,
+    title: 'Draft Responses',
+    description: 'Compose a professional follow-up email',
   },
 ];
 
@@ -33,27 +33,24 @@ export default function ActionButton({ button, onClick }) {
   return (
     <button
       onClick={() => onClick?.(button)}
-      className="group relative w-full max-w-[240px] glass-strong rounded-xl p-4 text-left transition-all duration-300 hover:scale-105 hover:bg-white/10 active:scale-95"
+      className="group relative w-full rounded-2xl p-4 text-left transition-all duration-200 bg-[#141624]/70 hover:bg-[#1a1d2e] border border-white/5 hover:border-purple-500/30 active:scale-[0.98] shadow-sm flex flex-col justify-between h-full min-h-[110px]"
     >
-      {/* Purple glow on hover */}
-      <div className="absolute inset-0 bg-purple-600/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      {/* Subtle hover glow behind card */}
+      <div className="absolute inset-0 rounded-2xl bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
       {/* Content */}
-      <div className="relative flex flex-col gap-2">
+      <div className="relative flex flex-col gap-2.5">
         {/* Icon */}
-        <div className="w-9 h-9 rounded-lg bg-purple-600/20 flex items-center justify-center group-hover:bg-purple-600/30 transition-colors">
-          <Icon className="w-4 h-4 text-purple-400" />
+        <div className="w-8 h-8 rounded-xl bg-purple-500/15 flex items-center justify-center text-purple-300 group-hover:bg-purple-500/25 transition-colors">
+          <Icon className="w-4 h-4" />
         </div>
 
         {/* Text */}
         <div>
-          <h3 className="text-base font-semibold text-white mb-1">{button.title}</h3>
-          <p className="text-sm text-gray-400">{button.description}</p>
+          <h3 className="text-xs font-semibold text-white mb-0.5 tracking-wide">{button.title}</h3>
+          <p className="text-[11px] text-gray-400 leading-snug line-clamp-2">{button.description}</p>
         </div>
       </div>
-
-      {/* Border glow effect */}
-      <div className="absolute inset-0 rounded-xl border border-purple-600/0 group-hover:border-purple-600/30 transition-colors duration-300"></div>
     </button>
   );
 }
