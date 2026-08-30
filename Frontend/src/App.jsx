@@ -222,16 +222,14 @@ function ChatApp() {
         onDeleteSession={handleDeleteSession}
       />
 
-      {/* Sidebar - Desktop */}
-      <div className="hidden md:block flex-shrink-0">
-        <Sidebar
-          onOpenHistory={() => setIsHistoryDrawerOpen(true)}
-          onNewChat={handleNewChat}
-        />
-      </div>
+      {/* Sidebar Navigation: Desktop side bar + Mobile top header */}
+      <Sidebar
+        onOpenHistory={() => setIsHistoryDrawerOpen(true)}
+        onNewChat={handleNewChat}
+      />
 
       {/* Main Full-Width Content Area */}
-      <div className="flex-1 md:pl-14 flex flex-col h-full w-full min-w-0 overflow-hidden">
+      <div className="flex-1 md:pl-14 pt-13 md:pt-0 flex flex-col h-full w-full min-w-0 overflow-hidden">
         {messages.length === 0 ? (
           // Welcome View when no messages
           <div className="flex-1 overflow-y-auto flex flex-col w-full">
@@ -310,14 +308,6 @@ function ChatApp() {
             </div>
           </div>
         )}
-      </div>
-
-      {/* Sidebar - Mobile */}
-      <div className="md:hidden">
-        <Sidebar
-          onOpenHistory={() => setIsHistoryDrawerOpen(true)}
-          onNewChat={handleNewChat}
-        />
       </div>
     </div>
   );

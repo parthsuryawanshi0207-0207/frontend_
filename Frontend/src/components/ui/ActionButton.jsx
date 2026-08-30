@@ -33,7 +33,7 @@ export default function ActionButton({ button, onClick }) {
   return (
     <button
       onClick={() => onClick?.(button)}
-      className="group relative w-full rounded-2xl p-4 text-left transition-all duration-200 bg-[#141624]/70 hover:bg-[#1a1d2e] border border-white/5 hover:border-purple-500/30 active:scale-[0.98] shadow-sm flex flex-col justify-between h-full min-h-[110px]"
+      className="group relative w-full rounded-2xl p-3 md:p-4 text-left transition-all duration-200 bg-[#141624]/70 hover:bg-[#1a1d2e] border border-white/5 hover:border-purple-500/30 active:scale-[0.98] shadow-sm flex flex-col justify-between h-full min-h-[95px] md:min-h-[110px]"
     >
       {/* Subtle hover glow behind card */}
       <div className="absolute inset-0 rounded-2xl bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
