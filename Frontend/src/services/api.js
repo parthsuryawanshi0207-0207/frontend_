@@ -82,6 +82,7 @@ export async function sendMessage(message, metadata = {}) {
     body: JSON.stringify({
       question: message,
       user_email: userEmail,
+      chat_history: metadata.chatHistory || [],
     }),
   });
 

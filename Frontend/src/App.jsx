@@ -123,8 +123,13 @@ function ChatApp() {
         response = await getDemoResponse(messageText);
       } else {
         const activeEmail = user?.email || API_CONFIG.DEFAULT_USER_EMAIL;
+        const recentChatHistory = messages.slice(-6).map((m) => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.content,
+        }));
         response = await sendMessage(messageText, {
           userEmail: activeEmail,
+          chatHistory: recentChatHistory,
         });
       }
 
