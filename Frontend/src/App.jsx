@@ -163,7 +163,7 @@ function ChatApp() {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         isError: true,
-        content: `⚠️ Failed to get response: ${error.message}. Please verify the FastAPI backend server is running on http://localhost:8000.`,
+        content: `⚠️ Failed to get response: ${error.message}. Please check if the backend service is reachable.`,
         timestamp: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, errorMessage]);
